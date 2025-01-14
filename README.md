@@ -2,4 +2,8 @@ This repository is a test of a platformer game made with the [LÖVE](https://lov
 
 Nothing here is any professional, it's just a little project done by me.
 
+## Libraries
+
+[STI](https://github.com/karai17/Simple-Tiled-Implementation)(Simple-Tiled-Implementation)
+
 ##### Copyright© 2025 Treio1024. 
