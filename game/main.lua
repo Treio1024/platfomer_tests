@@ -1,11 +1,10 @@
 local lLove = love
 
-lLove.graphics.setDefaultFilter("nearest", "nearest")
-
 require'player'
 require'coin'
 require'gui'
-sti = require'libraries/sti'
+local sti = require'libraries/sti'
+local wf = require'windfield'
 
 function love.load()
     --print'main_'

@@ -7,8 +7,6 @@ function gui:load()
     self.coin = {}
 
     self:loadCoin()
-    self.font = lLove.graphics.newFont'super_legend_boy.ttf'
-    self.font:setFilter("nearest", "nearest", 0)
 end
 
 function gui:update(dt)
