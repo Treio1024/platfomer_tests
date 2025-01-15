@@ -142,11 +142,13 @@ end --end
 
 function player:beginContact(a, b, collision) --collision callbacks
     --print'contact_started'
-    local nx, ny = collision:getNormal()
+    local ny, nx = collision:getNormal()
+
     if not self.onGround then
         if a == player.collider.fixture then
 
             if ny > 0 then
+                print"test"
                 self:land(collision)
             elseif ny < 0 then
                 self.yvel = 0
@@ -162,10 +164,10 @@ function player:beginContact(a, b, collision) --collision callbacks
 
         end
     else
-        --[[if nx > 0 or nx < 0 then
+        if nx > 0 or nx < 0 then
             self.currentWallCollision = collision
             self.onTheWall = true
-        end]]--
+        end
     end
 end
 
@@ -177,9 +179,9 @@ function player:endContact(a, b, collision)
             self.onGround = false
         end
         
-        --[[if self.currentWallCollision == collision then
+        if self.currentWallCollision == collision then
             self.onTheWall = false
-        end]]--
+        end
     end 
 end --end
 
@@ -190,11 +192,11 @@ function player:enableDetails(key)
 end
 
 function player:showDetails()
-    --if player.detailsOn then
+    if player.detailsOn then
         love.graphics.print(string.format(
         "love_version_%.1f\nfps_%d\nx_vel_%.2f\ny_vel_%.2f\nx_%.2f\ny_%.2f\non_ground_%s\nstate_%s\ncoin_amout_%d",
         love.getVersion(), love.timer.getFPS(), self.xvel, self.yvel, self.x, self.y, self.onGround, self.state, self.coinsAmount), 0, 0, 0)
-    --end
+    end
 end
 
 function player:syncPhysics()

@@ -56,14 +56,14 @@ end
 
 function love.keypressed(key)
     player:jump(key)
-    --player:enableDetails(key)
+    player:enableDetails(key)
 end
 
 function beginContact(a, b, collision)
     --if Coin.beginContact(a, b, collision) then return end
-    player:beginContact(a, b, collision)
+    --player:beginContact(a, b, collision)
 end
 
 function endContact(a, b, collision)
-    player:endContact(a, b, collision)
+   --player:endContact(a, b, collision)
 end
