@@ -2,24 +2,32 @@ player = {}
 
 function player:load() --principal functions
     self.x = 100; self.y = 100
-    self.width = 32; self.height = 80
+    self.width = 48 * 2; self.height = 80 * 2
     self.xvel = 0; self.yvel = 0
     self.MAX_SPEED = 500
     self.ACCELERATION = 3500
     self.FRICTION = 6000
-    self.GRAVITY = 500
+    self.GRAVITY = 1250
     self.onGround = false
     self.jumpCounter = 0
     self.graceTime = 0
     self.direction = ""; self.state = "idle"; self.onTheWall = false
     self.coinsAmount = 0
-    self.detailsOn = false
     --print'attributes_loaded'
     --print'assets_loaded'
     self.collider = world:newRectangleCollider(self.x, self.y, self.width, self.height)
     self.collider:setType('dynamic')
     self.collider:setFixedRotation(true)
     --print'physics_loaded'
+
+    self.spritesheet = love.graphics.newImage'images/spritesheet.png'
+    self.grid = anim8.newGrid(48, 80, 192, 160)
+    
+    self.animations = {}
+    self.animations.walk_right = anim8.newAnimation(self.grid('1-4', 1), 0.2)
+    self.animations.walk_left = anim8.newAnimation(self.grid('1-4', 2), 0.2)
+    
+    self.animations.actual = self.animations.walk_right
 end
 
 function player:update(dt)
@@ -29,6 +37,7 @@ function player:update(dt)
     self:syncPhysics()
     self:move(dt)
     self:applyGravity(dt)
+    self.animations.actual:update(dt)
 end
 
 function player:draw() 
@@ -36,7 +45,8 @@ function player:draw()
     if self.direction == 'right' then X = 1
     else  X = -1 end]]--
     
-    love.graphics.draw(love.graphics.newImage'images/sprites/idle1.png', self.x, self.y, 0, 1, 1, self.width / 2, self.height / 2)
+    --love.graphics.draw(love.graphics.newImage'images/sprites/idle1.png', self.x / 2, self.y / 2, 0, 1, 1, self.width / 4, self.height / 4)
+    self.animations.actual:draw(self.spritesheet, (self.x / 2) - 24, (self.y / 2) - 40)
 end --end
 
 --[[function player:loadAssets() --animation functions
@@ -115,10 +125,10 @@ function player:jump(key)
     if key == 'space' or key == 'up' then
         --print(self.onGround)
         if self.onGround then
-            self.yvel = -500
+            self.yvel = -750
             --print'jumped'
         elseif self.jumpCounter > 0 and self.graceTime > 0 then -- double jump
-            self.yvel = -500 * 0.8
+            self.yvel = -750 * 0.8
             self.jumpCounter = self.jumpCounter - 1
             --print'double_jumped'
         end
@@ -137,36 +147,29 @@ function player:land(collision)
     self.onGround = true
     self.jumpCounter = 2
     self.graceTime = 0.9
-    --print'landed'
 end --end
 
 function player:beginContact(a, b, collision) --collision callbacks
     --print'contact_started'
-    local ny, nx = collision:getNormal()
+    local nx, ny = collision:getNormal()
 
     if not self.onGround then
         if a == player.collider.fixture then
 
-            if ny > 0 then
-                print"test"
+            if ny == 1 then
                 self:land(collision)
-            elseif ny < 0 then
+            elseif ny == -1 then
                 self.yvel = 0
             end
             
         elseif b == player.collider.fixture then
-            
-            if ny < 0 then
+
+            if ny == 1 then
                 self:land(collision)
-            elseif ny > 0 then                
+            elseif ny == 1 then                
                 self.yvel = 0
             end
 
-        end
-    else
-        if nx > 0 or nx < 0 then
-            self.currentWallCollision = collision
-            self.onTheWall = true
         end
     end
 end
@@ -178,26 +181,9 @@ function player:endContact(a, b, collision)
         if self.currentGroundCollision == collision then
             self.onGround = false
         end
-        
-        if self.currentWallCollision == collision then
-            self.onTheWall = false
-        end
     end 
 end --end
 
-function player:enableDetails(key)
-    if key == "f3" then
-        self.detailsOn = not self.detailsOn
-    end
-end
-
-function player:showDetails()
-    if player.detailsOn then
-        love.graphics.print(string.format(
-        "love_version_%.1f\nfps_%d\nx_vel_%.2f\ny_vel_%.2f\nx_%.2f\ny_%.2f\non_ground_%s\nstate_%s\ncoin_amout_%d",
-        love.getVersion(), love.timer.getFPS(), self.xvel, self.yvel, self.x, self.y, self.onGround, self.state, self.coinsAmount), 0, 0, 0)
-    end
-end
 
 function player:syncPhysics()
     self.x, self.y = self.collider:getPosition()

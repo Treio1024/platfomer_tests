@@ -2,9 +2,10 @@ love.graphics.setDefaultFilter("nearest", "nearest")
     
 require'player'
 --require'coin'
---require'gui'
+require'gui'
 local sti = require'libraries/sti'
 local wf = require'libraries.windfield'
+anim8 = require'libraries.anim8'
 
 function love.load()
     --print'main_'
@@ -18,7 +19,7 @@ function love.load()
     background = love.graphics.newImage'images/background.png'
     
     player:load()
-    --gui:load()
+    gui:load()
 
     --[[for i=1, 100 do
         Coin.new(lLove.math.random(1, 500), lLove.math.random(1, 500))
@@ -35,23 +36,27 @@ function love.update(dt)
     world:update(dt)
     player:update(dt)
     --Coin.updateA(dt)
-    --gui:update(dt)
+    gui:update(dt)
 end
 
 function love.draw()
     love.graphics.draw(background)
-    world:draw(0xff)
+    
     map:draw(0, 0, 2, 2)
+    
+    if player.detailsOn then
+        world:draw(0xff)
+    end
+
     love.graphics.push()
     love.graphics.scale(2, 2)
     
-    --player:draw()
+    player:draw()
     --Coin.drawA()
 
     love.graphics.pop()
 
-    player:showDetails()
-    --gui:draw() 
+    gui:draw() 
 end
 
 function love.keypressed(key)
@@ -61,9 +66,9 @@ end
 
 function beginContact(a, b, collision)
     --if Coin.beginContact(a, b, collision) then return end
-    --player:beginContact(a, b, collision)
+    player:beginContact(a, b, collision)
 end
 
 function endContact(a, b, collision)
-   --player:endContact(a, b, collision)
+   player:endContact(a, b, collision)
 end
