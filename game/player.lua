@@ -11,14 +11,12 @@ function player:load() --principal functions
     self.onGround = false
     self.jumpCounter = 0
     self.graceTime = 0
-    self.direction = ""; self.state = "idle"; self.onTheWall = false
+    self.direction = ""; self.onTheWall = false
     self.coinsAmount = 0
-    --print'attributes_loaded'
-    --print'assets_loaded'
+
     self.collider = world:newRectangleCollider(self.x, self.y, self.width, self.height)
     self.collider:setType('dynamic')
     self.collider:setFixedRotation(true)
-    --print'physics_loaded'
 
     self.spritesheet = love.graphics.newImage'images/spritesheet.png'
     self.grid = anim8.newGrid(48, 80, 288, 160)
@@ -37,75 +35,45 @@ function player:load() --principal functions
 end
 
 function player:update(dt)
-    --self:setState()
-    --self:animate(dt)
-    --self:decreaseGraceTime(dt)
+    self:decreaseGraceTime(dt)
     self:syncPhysics()
     self:move(dt)
+    self:setState()
     self:applyGravity(dt)
     self.animations.actual:update(dt)
 end
 
 function player:draw() 
-    --[[local X
-    if self.direction == 'right' then X = 1
-    else  X = -1 end]]--
-    
-    --love.graphics.draw(love.graphics.newImage'images/sprites/idle1.png', self.x / 2, self.y / 2, 0, 1, 1, self.width / 4, self.height / 4)
     self.animations.actual:draw(self.spritesheet, (self.x / 2) - 24, (self.y / 2) - 40)
 end --end
 
---[[function player:loadAssets() --animation functions
-    self.animation = {timer = 0, rate = 0.25}
-    
-    self.animation.walk = {total = 4, current = 1, image = {lLove.graphics.newImage'images/sprites/walking1.png', lLove.graphics.newImage'images/sprites/walking2.png',
-    lLove.graphics.newImage'images/sprites/walking3.png', lLove.graphics.newImage'images/sprites/walking2.png'}}
-    
-    self.animation.jump = {total = 1, current = 1, image = {lLove.graphics.newImage'images/sprites/jumping1.png'}}
-    self.animation.idle = {total = 1, current = 1, image = {lLove.graphics.newImage'images/sprites/idle1.png'}}
-    
-    self.animation.draw = self.animation.idle.image[1]
-    
-    self.width, self.height = self.animation.draw:getDimensions()    
-end
-
-function player:animate(dt)
-    self.animation.timer = self.animation.timer + dt
-    
-    if self.animation.timer > self.animation.rate then
-        self.animation.timer = 0
-        self:setNewFrame()
-        
-    end
-end
-
-function player:setNewFrame()
-    if self.animation[self.state].current < self.animation[self.state].total then
-        self.animation[self.state].current = self.animation[self.state].current + 1
-    else
-        self.animation[self.state].current = 1
-    end
-    self.animation.draw = self.animation[self.state].image[self.animation[self.state].current]
-    self.width, self.height = self.animation[self.state].image[self.animation[self.state].current]:getDimensions()
-end]]--
-
---[[function player:setState()
+function player:setState()
     if not self.onGround then
-        self.state = "jump"
-    elseif (self.xVel > 0 or self.xVel < 0) and (not self.onTheWall) then
-        self.state = "walk"
-    else
-        self.state = "idle"
+        if self.direction == "right" then
+            self.animations.actual = self.animations.jump_right
+        else
+            self.animations.actual = self.animations.jump_left
+        end
+    elseif self.xvel == 0 or self.onTheWall then
+        if self.direction == "right" then
+            self.animations.actual = self.animations.idle_right
+        else
+            self.animations.actual = self.animations.idle_left
+        end
     end
-end --end]]--
+end
 
 function player:move(dt)
     if love.keyboard.isDown'right' then
         
         self.xvel = math.min(self.xvel + self.ACCELERATION * dt, self.MAX_SPEED)
+        self.direction = "right"
+        self.animations.actual = self.animations.walk_right
     elseif love.keyboard.isDown'left' then
         
         self.xvel = math.max(self.xvel - self.ACCELERATION * dt, -self.MAX_SPEED)
+        self.direction = "left"
+        self.animations.actual = self.animations.walk_left
     else
         self:friction(dt)
     end
@@ -158,7 +126,6 @@ end --end
 function player:beginContact(a, b, collision) --collision callbacks
     --print'contact_started'
     local nx, ny = collision:getNormal()
-
     if not self.onGround then
         if a == player.collider.fixture then
 
@@ -178,18 +145,27 @@ function player:beginContact(a, b, collision) --collision callbacks
 
         end
     end
+
+    if nx == 1 or nx == -1 then
+        self.onTheWall = true
+        self.currentWallCollision = collision
+    end
 end
 
 function player:endContact(a, b, collision)
     --print'contact_ended'
     local nx, ny = collision:getNormal()
+
     if a == player.collider.fixture or b == player.collider.fixture then
         if self.currentGroundCollision == collision then
             self.onGround = false
         end
+
+        if self.currentWallCollision == collision then
+            self.onTheWall = false
+        end
     end 
 end --end
-
 
 function player:syncPhysics()
     self.x, self.y = self.collider:getPosition()

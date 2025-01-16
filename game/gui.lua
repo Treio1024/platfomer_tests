@@ -20,8 +20,8 @@ end
 function gui:showDetails()
     if player.detailsOn then
         love.graphics.print(string.format(
-        "love_version_%.1f\nfps_%d\nx_vel_%.2f\ny_vel_%.2f\nx_%.2f\ny_%.2f\non_ground_%s\nstate_%s\ncoin_amout_%d",
-        love.getVersion(), love.timer.getFPS(), player.xvel, player.yvel, player.x, player.y, player.onGround, player.state, player.coinsAmount), 0, 0, 0)
+        "love_version_%.1f\nfps_%d\nx_vel_%.2f\ny_vel_%.2f\nx_%.2f\ny_%.2f\non_ground_%s\ncoin_amout_%d",
+        love.getVersion(), love.timer.getFPS(), player.xvel, player.yvel, player.x, player.y, player.onGround, player.coinsAmount), 0, 0, 0)
     end
 end
 
