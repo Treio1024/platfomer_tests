@@ -9,4 +9,6 @@ Nothing here is any professional, it's just a little project done by me.
 
 [Windfield](https://github.com/a327ex/windfield)
 
+[Anim8](https://github.com/kikito/anim8)
+
 ##### Copyright© 2025 Treio1024.
