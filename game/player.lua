@@ -21,13 +21,19 @@ function player:load() --principal functions
     --print'physics_loaded'
 
     self.spritesheet = love.graphics.newImage'images/spritesheet.png'
-    self.grid = anim8.newGrid(48, 80, 192, 160)
+    self.grid = anim8.newGrid(48, 80, 288, 160)
     
     self.animations = {}
     self.animations.walk_right = anim8.newAnimation(self.grid('1-4', 1), 0.2)
     self.animations.walk_left = anim8.newAnimation(self.grid('1-4', 2), 0.2)
-    
-    self.animations.actual = self.animations.walk_right
+
+    self.animations.jump_right = anim8.newAnimation(self.grid('5-5', 1), 1)
+    self.animations.jump_left = anim8.newAnimation(self.grid('5-5', 2), 1)
+
+    self.animations.idle_right = anim8.newAnimation(self.grid('6-6', 1), 1)
+    self.animations.idle_left = anim8.newAnimation(self.grid('6-6', 2), 1)
+
+    self.animations.actual = self.animations.idle_right
 end
 
 function player:update(dt)
