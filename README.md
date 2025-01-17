@@ -11,4 +11,6 @@ Nothing here is any professional, it's just a little project done by me.
 
 [Anim8](https://github.com/kikito/anim8)
 
+[Gamera](https://github.com/kikito/gamera)
+
 ##### Copyright© 2025 Treio1024.

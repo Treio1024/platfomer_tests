@@ -6,6 +6,7 @@ map = require'map'
 
 wf = require'libraries/windfield'
 anim8 = require'libraries/anim8'
+gamera = require'libraries.gamera'
 
 function love.load()
     --print'main_'
@@ -14,12 +15,8 @@ function love.load()
     map:load()
     player:load()
     gui:load()
-
-    local counter = 0
-    for i=1, 5 do
-        Coin.new(325 + counter, 350)
-        counter = counter + 50
-    end
+    cam = gamera.new(0, 0, 3840, 1546)
+    cam:setWindow(0, 0, 1280, 768)
 end
 
 function love.update(dt)
@@ -27,35 +24,37 @@ function love.update(dt)
     player:update(dt)
     Coin.updateA(dt)
     gui:update(dt)
+    cam:setPosition(player.x, player.y)
 end
 
 function love.draw()
-    love.graphics.draw(background)
-    
-    map.level:draw(0, 0, 2, 2)
-    
-    if gui.detailsOn then
-        world:draw(0xff)
-    end
 
-    love.graphics.push()
-    love.graphics.scale(2, 2)
+    cam:draw(function()
+        local camx, camy = cam:getPosition()
+
+        --map.levels[map.current_level]:draw(camx, camy, 2, 2)
+
+        love.graphics.draw(map.levelImages[map.current_level], 0, 0, 0, 2)
+        --love.graphics.draw(background, 0, 0)
     
-    player:draw()
-    Coin.drawA()
+        if gui.detailsOn then
+            world:draw(0xff)
+        end
 
-    love.graphics.pop()
+        love.graphics.push()
+        love.graphics.scale(2, 2)
+            player:draw()
+            Coin.drawA()
+        love.graphics.pop()
 
-    gui:draw() 
+    end)
+
+    gui:draw()
 end
 
 function love.keypressed(key)
     player:jump(key)
     gui:enableDetails(key)
-
-    if key == 'g' then
-        map:next()
-    end
 end
 
 function beginContact(a, b, collision)

@@ -1,7 +1,9 @@
 player = {}
 
 function player:load() --principal functions
-    self.x = 100; self.y = 100
+    self.x = 64; self.y = 1312
+    self.startx = self.x; self.starty = self.y
+    self.endx = 1235
     self.width = 48 * 2; self.height = 80 * 2
     self.xvel = 0; self.yvel = 0
     self.MAX_SPEED = 500
@@ -35,8 +37,9 @@ function player:load() --principal functions
 end
 
 function player:update(dt)
+    self:backToStart()
     self:syncPhysics()
-    self:decreaseGraceTime(dt)
+    --self:decreaseGraceTime(dt)
     self:move(dt)
     self:setState()
     self.animations.actual:update(dt)
@@ -119,8 +122,16 @@ function player:land(collision)
     self.currentGroundCollision = collision
     self.yvel = 0
     self.onGround = true
-    self.jumpCounter = 2
+    self.jumpCounter = 90
     self.graceTime = 0.9
+end
+
+function player:backToStart()
+    if self.x > map.levels[map.current_level].properties.endX and (self.y >= map.levels[map.current_level].properties.endY2 or self.y <= map.levels[map.current_level].properties.endY1) then
+        map:next(true)
+
+        self.collider:setPosition(map.levels[map.current_level].properties.startX, map.levels[map.current_level].properties.startY)
+    end
 end --end
 
 function player:beginContact(a, b, collision) --collision callbacks
@@ -138,7 +149,7 @@ function player:beginContact(a, b, collision) --collision callbacks
             
         elseif b == player.collider.fixture then
 
-            if ny == 1 then
+            if ny == -1 then
                 self:land(collision)
             elseif ny == 1 then                
                 self.yvel = 0
