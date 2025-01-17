@@ -27,7 +27,7 @@ function map:init()
         v.layers.solids.visible = false
     end
 
-    for i, obj in pairs(self.levels[self.current_level].layers["solids"].objects) do
+    for i, obj in pairs(self.levels[self.current_level].layers.solids.objects) do
         local static = world:newRectangleCollider(obj.x * 2, obj.y * 2, obj.width * 2, obj.height * 2)
         static:setType('static')
         table.insert(self.statics, static)

@@ -37,7 +37,7 @@ function player:load() --principal functions
 end
 
 function player:update(dt)
-    self:backToStart()
+    --self:backToStart()
     self:syncPhysics()
     --self:decreaseGraceTime(dt)
     self:move(dt)

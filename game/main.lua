@@ -55,6 +55,10 @@ end
 function love.keypressed(key)
     player:jump(key)
     gui:enableDetails(key)
+
+    if key == 'g' then
+        map:next(true)
+    end
 end
 
 function beginContact(a, b, collision)
