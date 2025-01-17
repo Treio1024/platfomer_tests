@@ -35,12 +35,12 @@ function player:load() --principal functions
 end
 
 function player:update(dt)
-    self:decreaseGraceTime(dt)
     self:syncPhysics()
+    self:decreaseGraceTime(dt)
     self:move(dt)
     self:setState()
-    self:applyGravity(dt)
     self.animations.actual:update(dt)
+    self:applyGravity(dt)
 end
 
 function player:draw() 
@@ -126,6 +126,7 @@ end --end
 function player:beginContact(a, b, collision) --collision callbacks
     --print'contact_started'
     local nx, ny = collision:getNormal()
+    
     if not self.onGround then
         if a == player.collider.fixture then
 

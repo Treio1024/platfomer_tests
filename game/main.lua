@@ -1,50 +1,40 @@
 love.graphics.setDefaultFilter("nearest", "nearest")
     
 require'player'
---require'coin'
 require'gui'
-local sti = require'libraries/sti'
-local wf = require'libraries.windfield'
-anim8 = require'libraries.anim8'
+map = require'map'
+
+wf = require'libraries/windfield'
+anim8 = require'libraries/anim8'
 
 function love.load()
     --print'main_'
-
-    world = wf.newWorld(0, 0, false)
-
-    map = sti('images/map.lua', {'box2d'})
-    map.layers.solids.visible = false
-
-    world.box2d_world:setCallbacks(beginContact, endContact)
     background = love.graphics.newImage'images/background.png'
     
+    map:load()
     player:load()
     gui:load()
 
-    --[[for i=1, 100 do
-        Coin.new(lLove.math.random(1, 500), lLove.math.random(1, 500))
-    end]]--
-    statics = {}
-    for i, obj in pairs(map.layers["solids"].objects) do
-        local wall = world:newRectangleCollider(obj.x * 2, obj.y * 2, obj.width * 2, obj.height * 2)
-        wall:setType('static')
-        table.insert(statics, wall)
+    local counter = 0
+    for i=1, 5 do
+        Coin.new(325 + counter, 350)
+        counter = counter + 50
     end
 end
 
 function love.update(dt)
     world:update(dt)
     player:update(dt)
-    --Coin.updateA(dt)
+    Coin.updateA(dt)
     gui:update(dt)
 end
 
 function love.draw()
     love.graphics.draw(background)
     
-    map:draw(0, 0, 2, 2)
+    map.level:draw(0, 0, 2, 2)
     
-    if player.detailsOn then
+    if gui.detailsOn then
         world:draw(0xff)
     end
 
@@ -52,7 +42,7 @@ function love.draw()
     love.graphics.scale(2, 2)
     
     player:draw()
-    --Coin.drawA()
+    Coin.drawA()
 
     love.graphics.pop()
 
@@ -61,11 +51,15 @@ end
 
 function love.keypressed(key)
     player:jump(key)
-    player:enableDetails(key)
+    gui:enableDetails(key)
+
+    if key == 'g' then
+        map:next()
+    end
 end
 
 function beginContact(a, b, collision)
-    --if Coin.beginContact(a, b, collision) then return end
+    if Coin.beginContact(a, b, collision) then return end
     player:beginContact(a, b, collision)
 end
 
