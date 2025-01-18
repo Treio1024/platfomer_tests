@@ -6,7 +6,7 @@ function player:load() --principal functions
     self.endx = 1235
     self.width = 48 * 2; self.height = 80 * 2
     self.xvel = 0; self.yvel = 0
-    self.MAX_SPEED = 500
+    self.MAX_SPEED = 750
     self.ACCELERATION = 3500
     self.FRICTION = 6000
     self.GRAVITY = 1250
@@ -37,7 +37,7 @@ function player:load() --principal functions
 end
 
 function player:update(dt)
-    --self:backToStart()
+    self:backToStart()
     self:syncPhysics()
     --self:decreaseGraceTime(dt)
     self:move(dt)
@@ -128,9 +128,13 @@ end
 
 function player:backToStart()
     if self.x > map.levels[map.current_level].properties.endX and (self.y >= map.levels[map.current_level].properties.endY2 or self.y <= map.levels[map.current_level].properties.endY1) then
+    
         map:next(true)
-
         self.collider:setPosition(map.levels[map.current_level].properties.startX, map.levels[map.current_level].properties.startY)
+    elseif self.x < 0 and (self.y >= map.levels[map.current_level].properties.startY or self.y <= map.levels[map.current_level].properties.startY) then
+        
+        map:next(false)
+        self.collider:setPosition(map.levels[map.current_level].properties.endX - 32, map.levels[map.current_level].properties.endY1)
     end
 end --end
 

@@ -34,8 +34,7 @@ function love.draw()
 
         --map.levels[map.current_level]:draw(camx, camy, 2, 2)
 
-        love.graphics.draw(map.levelImages[map.current_level], 0, 0, 0, 2)
-        --love.graphics.draw(background, 0, 0)
+        love.graphics.draw(map.levels[map.current_level].image, 0, 0, 0, 2)
     
         if gui.detailsOn then
             world:draw(0xff)

@@ -1,17 +1,9 @@
-local sti = require'libraries/sti'
-
 require'coin'
 
 local map = {}
 
 function map:load()
-    self.levels = {}
-    self.levels[1] = sti('images/map1.lua', {'box2d'})
-    self.levels[2] = sti('images/map2.lua', {'box2d'})
-
-    self.levelImages = {}
-    self.levelImages[1] = love.graphics.newImage'images/map1.png'
-    self.levelImages[2] = love.graphics.newImage'images/map2.png'
+    self.levels = require'levels'
 
     self.current_level = 1
 
