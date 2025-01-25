@@ -14,8 +14,8 @@ function player:load()
     self.direction = ""; self.onTheWall = false
     self.coinsAmount = 0
     self.health = 3
-    self.damaged = false; self.death_delay = 0.5
-    self.damageSound = love.audio.newSource('assets/audio/pipefalling.mp3', 'static')
+    self.died = false; self.death_delay = 0.5
+    self.dieSound = love.audio.newSource('assets/audio/pipefalling.mp3', 'static')
 
     ----------------------------------------------------------------------------------------------------
 
@@ -51,7 +51,7 @@ function player:update(dt)
     self:setState()
     self.animations.actual:update(dt)
     self:applyGravity(dt)
-    self:afterDamage(dt)
+    self:afterDied(dt)
 end
 
 function player:draw() 
@@ -187,29 +187,29 @@ end
 
 ----------------------------------------------------------------------------------------------------
 
-function player:takeDamage(val)
-    self.health = self.health - val
-    self.damaged = true
-    self.damageSound:play()
+function player:die()
+    self.died = true
+    self.dieSound:play()
 end
 
-function player:afterDamage(dt)
-    if self.damaged then
+function player:afterDied(dt)
+    if self.died then
         self.xvel, self.yvel = 0, 0
-        
+        self.health = 0
+    
         if self.direction == 'right' then
             self.animations.actual = self.animations.damaged_right
         else
             self.animations.actual = self.animations.damaged_left    
         end
 
-
         self.death_delay = self.death_delay - dt
         
         if self.death_delay <= 0 then
             player.collider:setPosition(map.current_level.properties.startX, map.current_level.properties.startY)
-            self.damaged = false
+            self.died = false
             self.death_delay = 0.5
+            self.health = 3
             return
         end
     end
