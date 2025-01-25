@@ -16,6 +16,7 @@ function love.load()
     map:load()
     player:load()
     gui:load()
+
     cam = gamera.new(0, 0, 3840, 1546)
     cam:setWindow(0, 0, 1280, 768)
 end
@@ -23,9 +24,13 @@ end
 function love.update(dt)
     map:update(dt)
     world:update(dt)
+
     player:update(dt)
-    Coin.updateA(dt)
+
+    Coin.update(dt)
+    
     gui:update(dt)
+    
     cam:setPosition(player.x, player.y)
 end
 
@@ -37,17 +42,11 @@ function love.draw()
         love.graphics.push()
         love.graphics.scale(2, 2)
         player:draw()
-        Coin.drawA()
+        Coin.draw()
         spikes.draw()
         love.graphics.pop()
         
-        
-        if gui.detailsOn then
-            world:draw(0xff)
-            
-            love.graphics.circle('fill', player.x, player.y, 5)
-            love.graphics.circle('fill', player.x - player.width / 2, player.y - player.height / 2, 5)
-        end
+        gui:showDetailsOnCamera()
     end)
     
     gui:draw()
@@ -58,6 +57,7 @@ end
 function love.keypressed(key)
     player:jump(key)
     gui:enableDetails(key)
+
     if key == 'escape' then
         love.window.close()
     end

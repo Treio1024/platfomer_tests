@@ -24,6 +24,8 @@ function spikes.draw()
     end
 end
 
+----------------------------------------------------------------------------------------------------
+
 function spikes.remove()
     for i, v in pairs(aSpikes) do
         v.collider:destroy()
@@ -31,10 +33,12 @@ function spikes.remove()
     end
 end
 
+----------------------------------------------------------------------------------------------------
+
 function spikes.beginContact(a, b, contact)
     for _, v in ipairs(aSpikes) do
         if (a == v.collider.fixture or b == v.collider.fixture) and (a == player.collider.fixture or b == player.collider.fixture) then
-            player:takeDamage(1)
+            player:die()
             return true
         end
     end

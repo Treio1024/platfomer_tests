@@ -18,8 +18,10 @@ function map:update(dt)
     self.current_level:update()
 end
 
+----------------------------------------------------------------------------------------------------
+
 function map:clean()
-    Coin:removeALL()
+    Coin.remove()
     spikes.remove()
 
     for i, v in ipairs(self.statics) do
