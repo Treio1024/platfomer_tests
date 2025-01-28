@@ -4,11 +4,13 @@ require'coin'
 require'player'
 require'gui'
 require'spikes'
-map = require'map'
+require'map'
 
 wf = require'libraries/windfield'
 anim8 = require'libraries/anim8'
 gamera = require'libraries.gamera'
+
+cam = gamera.new(0, 0, 3840, 1546)
 
 ----------------------------------------------------------------------------------------------------
 
@@ -17,7 +19,6 @@ function love.load()
     player:load()
     gui:load()
 
-    cam = gamera.new(0, 0, 3840, 1546)
     cam:setWindow(0, 0, 1280, 768)
 end
 
@@ -30,7 +31,7 @@ function love.update(dt)
     Coin.update(dt)
     
     gui:update(dt)
-    
+
     cam:setPosition(player.x, player.y)
 end
 
@@ -60,6 +61,14 @@ function love.keypressed(key)
 
     if key == 'escape' then
         love.window.close()
+    end
+
+    if key == 'g' then
+        player.collider = world:newRectangleCollider(player.x, player.y, 24, 40)
+        player.collider:setType('dynamic')
+        player.collider:setFixedRotation(true)
+
+        player.onGround = false
     end
 end
 

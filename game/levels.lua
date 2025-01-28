@@ -6,6 +6,7 @@ levels.lobby = sti('assets/map1.lua', {'box2d'})
 levels.lobby.image = love.graphics.newImage'assets/map1.png'
 
 function levels.lobby:load()
+    cam:setWorld(0, 0, self.image:getWidth() * 2, self.image:getHeight() * 2)
     
     for i, obj in pairs(self.layers.solids.objects) do
         local static = world:newRectangleCollider(obj.x * 2, obj.y * 2, obj.width * 2, obj.height * 2)
@@ -43,11 +44,16 @@ levels.green1 = sti('assets/map2.lua', {'box2d'})
 levels.green1.image = love.graphics.newImage'assets/map2.png'
 
 function levels.green1:load()
+    cam:setWorld(0, 0, self.image:getWidth() * 2, self.image:getHeight() * 2)
 
     for i, obj in pairs(self.layers.solids.objects) do
         local static = world:newRectangleCollider(obj.x * 2, obj.y * 2, obj.width * 2, obj.height * 2)
         static:setType('static')
         table.insert(map.statics, static)
+
+        for i, obj in pairs(self.layers.spikes.objects) do
+            spikes.new(obj.x, obj.y, obj.width * 2, obj.height * 2)
+        end
     end
 end
 
@@ -83,6 +89,7 @@ levels.purple1 = sti('assets/map3.lua', {'box2d'})
 levels.purple1.image = love.graphics.newImage'assets/map3.png'
 
 function levels.purple1:load()
+    cam:setWorld(0, 0, self.image:getWidth() * 2, self.image:getHeight() * 2)
 
     for i, obj in pairs(self.layers.solids.objects) do
         local static = world:newRectangleCollider(obj.x * 2, obj.y * 2, obj.width * 2, obj.height * 2)

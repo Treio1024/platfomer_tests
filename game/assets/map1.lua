@@ -10,11 +10,11 @@ return {
   tilewidth = 32,
   tileheight = 32,
   nextlayerid = 6,
-  nextobjectid = 114,
+  nextobjectid = 116,
   properties = {
     ["endX"] = 3808,
     ["endY"] = 1392,
-    ["startX"] = 64,
+    ["startX"] = 96,
     ["startY"] = 1392
   },
   tilesets = {
@@ -429,27 +429,27 @@ return {
           properties = {}
         },
         {
-          id = 109,
+          id = 114,
           name = "",
           type = "",
           shape = "rectangle",
-          x = 608,
-          y = 512,
-          width = 256,
-          height = 32,
+          x = 864,
+          y = 544,
+          width = 32,
+          height = 192,
           rotation = 0,
           visible = true,
           properties = {}
         },
         {
-          id = 110,
+          id = 115,
           name = "",
           type = "",
           shape = "rectangle",
-          x = 864,
+          x = 608,
           y = 512,
-          width = 32,
-          height = 224,
+          width = 288,
+          height = 32,
           rotation = 0,
           visible = true,
           properties = {}

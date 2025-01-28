@@ -1,6 +1,6 @@
 require'coin'
 
-local map = {}
+map = {}
 
 function map:load()
     self.levels = require'levels'
@@ -29,5 +29,3 @@ function map:clean()
         self.statics[i] = nil
     end
 end
-
-return map
