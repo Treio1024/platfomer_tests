@@ -1,11 +1,11 @@
 Coin = {}; Coin.__index = Coin
-Coin.sound = love.audio.newSource('assets/audio/coinSound.mp3', 'static')
+Coin.sound = love.audio.newSource('assets/audio/coinSound.wav', 'static')
 aCoins = {}
 
 function Coin.new(x, y)
     local i = setmetatable({}, Coin)
 
-    image = love.graphics.newImage'assets/gold_coin.png'
+    i.image = love.graphics.newImage'assets/gold_coin.png'
 
     i.x = x; i.y = y
     i.width, i.height = i.image:getDimensions()
@@ -43,6 +43,15 @@ end
 function Coin.draw()
     for _, v in ipairs(aCoins) do
         love.graphics.draw(v.image, v.x / 2 + v.width, v.y / 2 + v.height, 0, v.scaleX, 1, v.width / 2, v.height / 2)
+    end
+end
+
+----------------------------------------------------------------------------------------------------
+
+function Coin.remove()
+    for i, v in ipairs(aCoins) do
+        v.collider:destroy()
+        aCoins[i] = nil
     end
 end
 

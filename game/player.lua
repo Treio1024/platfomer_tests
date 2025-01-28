@@ -2,7 +2,7 @@ player = {}
 
 function player:load()
     self.x = map.current_level.properties.startX; self.y = map.current_level.properties.startY
-    self.width = 48 * 2; self.height = 80 * 2
+    self.width = 32 * 2; self.height = 80 * 2
     self.xvel = 0; self.yvel = 0
     self.maxSpeed = 750
     self.ACCELERATION = 3500
@@ -15,7 +15,7 @@ function player:load()
     self.coinsAmount = 0
     self.health = 3
     self.died = false; self.death_delay = 0.5
-    self.dieSound = love.audio.newSource('assets/audio/pipefalling.mp3', 'static')
+    self.dieSound = love.audio.newSource('assets/audio/pipefalling.wav', 'static')
 
     ----------------------------------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ function player:update(dt)
 end
 
 function player:draw() 
-    self.animations.actual:draw(self.spritesheet, (self.x / 2) - 24, (self.y / 2) - 40)
+    self.animations.actual:draw(self.spritesheet, (self.x / 2) - self.width / 4 - 8, (self.y / 2) - self.height / 4)
 end
 
 ----------------------------------------------------------------------------------------------------
@@ -144,6 +144,7 @@ end
 
 function player:beginContact(a, b, collision)
     local nx, ny = collision:getNormal()
+    --print'contact started'
     
     if not self.onGround then
         if a == player.collider.fixture then
@@ -158,7 +159,7 @@ function player:beginContact(a, b, collision)
 
             if ny == -1 then
                 self:land(collision)
-            elseif ny == 1 then                
+            elseif ny == 1 then
                 self.yvel = 0
             end
 
@@ -173,6 +174,7 @@ end
 
 function player:endContact(a, b, collision)
     local nx, ny = collision:getNormal()
+    --print'contact ended'
 
     if a == player.collider.fixture or b == player.collider.fixture then
         if self.currentGroundCollision == collision then
@@ -189,6 +191,7 @@ end
 
 function player:die()
     self.died = true
+    self.dieSound:stop()
     self.dieSound:play()
 end
 
